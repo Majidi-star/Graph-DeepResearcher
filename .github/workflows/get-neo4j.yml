@@ -1,22 +1,15 @@
-name: Pull and Save Neo4j GDS
-on: [workflow_dispatch] # اجازه اجرای دستی را می‌دهد
-
+name: Download GDS Plugin
+on: [workflow_dispatch]
 jobs:
-  download_image:
+  get_plugin:
     runs-on: ubuntu-latest
     steps:
-      - name: Pull Neo4j GDS Image
-        # دانلود ایمیج رسمی که GDS را از پیش نصب شده دارد
-        run: docker pull neo4j/neo4j-graph-data-science:latest
-
-      - name: Save Image to Tar
-        # تبدیل ایمیج به یک فایل قابل انتقال
-        run: docker save neo4j/neo4j-graph-data-science:latest -o neo4j-gds.tar
-
-      - name: Upload Artifact
-        # قرار دادن فایل برای دانلود شما
+      - name: Download GDS Jar
+        run: |
+          # دانلود آخرین نسخه پایدار پلاگین GDS برای Neo4j 5.x
+          curl -L "https://cdn.graphdatascience.com/neo4j-graph-data-science-2.10.0.jar" -o gds-plugin.jar
+      - name: Upload to Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: neo4j-gds-image
-          path: neo4j-gds.tar
-          retention-days: 1 # فایل فقط ۱ روز باقی می‌ماند
+          name: neo4j-gds-plugin
+          path: gds-plugin.jar
