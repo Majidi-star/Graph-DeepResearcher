@@ -1,15 +1,18 @@
-name: Download GDS Plugin
+name: Download GDS Plugin Jar
 on: [workflow_dispatch]
+
 jobs:
-  get_plugin:
+  download_jar:
     runs-on: ubuntu-latest
     steps:
-      - name: Download GDS Jar
+      - name: Download GDS File
         run: |
-          # دانلود آخرین نسخه پایدار پلاگین GDS برای Neo4j 5.x
-          curl -L "https://cdn.graphdatascience.com/neo4j-graph-data-science-2.10.0.jar" -o gds-plugin.jar
-      - name: Upload to Artifacts
+          # دانلود آخرین نسخه پایدار هماهنگ با Neo4j 5.x
+          curl -L "https://graphdatascience.ninja/get-gds" -o gds-plugin.zip
+          unzip gds-plugin.zip -d ./gds-folder
+      
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: neo4j-gds-plugin
-          path: gds-plugin.jar
+          name: neo4j-gds-plugin-file
+          path: ./gds-folder/*.jar
