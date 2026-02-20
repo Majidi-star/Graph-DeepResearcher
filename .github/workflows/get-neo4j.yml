@@ -8,7 +8,7 @@ jobs:
       - name: Download GDS File
         run: |
           # دانلود آخرین نسخه پایدار هماهنگ با Neo4j 5.x
-          curl -L "https://graphdatascience.ninja/get-gds" -o gds-plugin.zip
+          curl -L "https://dist.neo4j.org/neo4j-desktop-2/win/neo4j-desktop-2.1.2-x64.exe" -o gds-plugin.zip
           unzip gds-plugin.zip -d ./gds-folder
       
       - name: Upload Artifact
