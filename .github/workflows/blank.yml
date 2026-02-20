@@ -1,13 +1,33 @@
 name: Remote Download
 on: [workflow_dispatch]
+
 jobs:
   download:
     runs-on: ubuntu-latest
     steps:
       - name: Download File
-        run: curl -L -H "User-Agent: Mozilla/5.0" "https://antigravity.google/download/windows/x64" -o setup.exe
+        run: |
+          curl -L -v \
+          -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36" \
+          -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8" \
+          -H "Accept-Language: en-US,en;q=0.9" \
+          -H "Referer: https://antigravity.google/" \
+          --compressed \
+          "https://antigravity.google/download/windows/x64" -o setup.exe
+
+      - name: Check if file exists
+        run: |
+          if [ -f setup.exe ]; then
+            echo "File downloaded successfully."
+            ls -lh setup.exe
+          else
+            echo "Download failed!"
+            exit 1
+          fi
+
       - name: Upload to Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: installer
+          name: Antigravity-Installer
           path: setup.exe
+          retention-days: 1
