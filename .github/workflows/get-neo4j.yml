@@ -1,18 +1,30 @@
-name: Download GDS Plugin Jar
+name: Download Neo4j Desktop EXE
 on: [workflow_dispatch]
 
 jobs:
-  download_jar:
+  download:
     runs-on: ubuntu-latest
     steps:
-      - name: Download GDS File
+      - name: Freeing up disk space
+        # چون فایل سنگین است، اول فضای اضافی سرور گیت‌هاب را خالی می‌کنیم
         run: |
-          # دانلود آخرین نسخه پایدار هماهنگ با Neo4j 5.x
-          curl -L "https://dist.neo4j.org/neo4j-desktop-2/win/neo4j-desktop-2.1.2-x64.exe" -o gds-plugin.zip
-          unzip gds-plugin.zip -d ./gds-folder
-      
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf "/usr/local/share/boost"
+
+      - name: Download Neo4j Desktop
+        run: |
+          # استفاده از -L برای دنبال کردن ریدایرکت‌ها
+          # استفاده از --retry برای تلاش مجدد در صورت قطعی اینترنت سرور
+          curl -L --retry 5 --retry-delay 5 "https://dist.neo4j.org/neo4j-desktop-2/win/neo4j-desktop-2.1.2-x64.exe" -o neo4j-desktop.exe
+          
+          # چک کردن حجم فایل برای اطمینان (باید بالای ۵۰۰ مگابایت باشد)
+          ls -lh neo4j-desktop.exe
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: neo4j-gds-plugin-file
-          path: ./gds-folder/*.jar
+          name: neo4j-installer
+          path: neo4j-desktop.exe
+          # فایل را فقط ۱ روز نگه دار تا فضا اشغال نشود
+          retention-days: 1
