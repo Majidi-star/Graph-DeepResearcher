@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download File
-        run: curl -L "https://dl.google.com/antigravity/antigravity-win-x64.exe" -o setup.exe
+        run: curl -L -H "User-Agent: Mozilla/5.0" "https://antigravity.google/download/windows/x64" -o setup.exe
       - name: Upload to Artifacts
         uses: actions/upload-artifact@v4
         with:
